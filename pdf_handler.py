@@ -14,14 +14,12 @@ FLAGS = flags.FLAGS
 need poppler(pdf rendering library) and pdf2image package (python)
 """
 
-
 def split_pdf_to_images(
     src_pdf_path: str,
     output_image_dir: str,
     output_image_format: str = "png",
     dpi: int = 600,
 ) -> None:
-
     """split pdf into images
     :param src_pdf_path: source pdf path
     :param output_image_dir: output image directory
@@ -36,9 +34,14 @@ def split_pdf_to_images(
     # split pdf to pages,
     pages = convert_from_path(src_pdf_path, dpi=dpi, fmt=output_image_format)
 
-    file_name, ext = os.path.splitext(src_pdf_path)
+    # get file_path without parent directory path
+    basename = os.path.basename(src_pdf_path)
+
+    # new file path with output_image_dir
+    file_path = os.path.join(output_image_dir, basename)
+
     for idx, page in enumerate(pages):
-        output_image_path = f"{file_name}_{idx}.{output_image_format.lower()}"
+        output_image_path = f"{file_path}_{idx}.{output_image_format.lower()}"
         logging.info(f"save splited image on {output_image_path}")
         page.save(output_image_path, output_image_format)
 
