@@ -10,9 +10,7 @@ flags.DEFINE_integer("dpi", 600, "dots per inch")
 
 FLAGS = flags.FLAGS
 
-"""
-need poppler(pdf rendering library) and pdf2image package (python)
-"""
+""" need poppler(pdf rendering library) and pdf2image package (python) """
 
 def split_pdf_to_images(
     src_pdf_path: str,
