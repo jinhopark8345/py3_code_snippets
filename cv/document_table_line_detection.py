@@ -62,7 +62,7 @@ def find_edges(img_path):
     print(f"initial {len(vlines) = }")
 
     hlines_to_doc = filter(hline_validator, hlines)
-    # vlines_to_doc = filter(vline_validator, vlines)
+    vlines_to_doc = filter(vline_validator, vlines)
 
     for line in hlines_to_doc:
         x1, y1, x2, y2 = line[0]
@@ -102,8 +102,8 @@ def main():
     # pdf_path = "/home/jinho/Projects/asia-poc/data/attention.pdf"
     # split_pdf(pdf_path)
 
-    # doc_path = "/home/jinho/Projects/asia-poc/data/out_8.jpg"
-    # find_edges(doc_path)
+    doc_path = "/home/jinho/Projects/py3/pdf2image_demo/data/dst/lottery.pdf_8.png"
+    find_edges(doc_path)
 
 
 if __name__ == "__main__":

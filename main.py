@@ -4,8 +4,8 @@ import os
 
 def demo_split_pdf_to_images():
     root = os.path.realpath(".")
-    src_path = os.path.join(root, "pdf2image_usage/data/src/lottery.pdf")
-    dst_path = os.path.join(root, "pdf2image_usage/data/dst/")
+    src_path = os.path.join(root, "pdf2image_demo/data/src/lottery.pdf")
+    dst_path = os.path.join(root, "pdf2image_demo/data/dst/")
     split_pdf_to_images(src_path, dst_path, dpi=200)
 
 
