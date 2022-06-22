@@ -5,7 +5,13 @@ import os
 from pprint import pprint
 
 
-def find_edges(img_path):
+def detect_document_lines(img_path):
+    """TODO describe function
+
+    :param img_path:
+    :returns:
+
+    """
     horizontal_line_threshold = 2
     hline_validator = lambda l: abs(l[0][1] - l[0][3]) < horizontal_line_threshold
     vertical_line_threshold = 10
@@ -102,8 +108,9 @@ def main():
     # pdf_path = "/home/jinho/Projects/asia-poc/data/attention.pdf"
     # split_pdf(pdf_path)
 
-    doc_path = "/home/jinho/Projects/py3/pdf2image_demo/data/dst/lottery.pdf_8.png"
-    find_edges(doc_path)
+    doc_path = "/home/jinho/Projects/py3/pdf2image_demo/data/dst/Transformer-attention-is-all-you-need.pdf_8.png"
+    # doc_path = "/home/jinho/Projects/py3/pdf2image_demo/data/dst/lottery.pdf_8.png"
+    detect_document_lines(doc_path)
 
 
 if __name__ == "__main__":
