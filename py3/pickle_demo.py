@@ -1,5 +1,8 @@
 
-def save(save_path, data):
+
+from typing import Any
+
+def save(save_path: str, data: Any):
     import pickle
     with open(save_path, "wb") as f:
         pickle.dump(data, f)
@@ -7,7 +10,7 @@ def save(save_path, data):
     # import pickle; f = open("data.pickle", "wb") ; pickle.dump(data, f) ; f.close()
 
 
-def load(load_path):
+def load(load_path: str):
     import pickle
     with open(load_path, "rb") as f:
         loaded_data = pickle.load(f)
@@ -22,3 +25,5 @@ data = ["A", "b", "C", "d"]
 save(save_path, data)
 loaded = load(save_path)
 print(loaded)
+
+print("hello world")
