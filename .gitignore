@@ -112,3 +112,6 @@ data/
 */data/
 
 *.pickle
+*.mp4
+*.m4v
+*.avi
