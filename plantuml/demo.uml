@@ -1,0 +1,24 @@
+title EL Exporting
+hide footbox
+Inference_Server ---> EntityRelationExporter : "texts, boxes, relations"
+note right of EntityRelationExporter
+prepare <nodes, nid2node,  connected_relations, color_graph>
+    1. prune unncessary edges
+    2. divide relations into connected_relations
+end note
+EntityRelationExporter ---> ConnectedComponent : "<connected_relation, nid2node>"
+note right of ConnectedComponent
+transform_graph2xlsx()
+        1. prepare key2key_tree
+        2. update key2key_tree xlsx coord
+        3. prepare kg2kg graph
+        4. match same line key2key_graph with kg2kg_graph
+            (kg2kg_graph & key2key_trees are merged at this point)
+        5. update kg2kg_graph xlsx coord
+        6. prepare value2value graph
+        7. update value2value_graph xlsx coord
+        8. merge header(kg2kg_graph + key2key_trees) with value2value_graph
+            (all nodes are merged at this point)
+end note
+ConnectedComponent ---> EntityRelationExporter : "json, xlsx"
+EntityRelationExporter -> Inference_Server: "jsons, xlsxs"
