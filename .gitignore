@@ -117,3 +117,5 @@ data/
 *.avi
 
 *.txt
+
+*.pth
