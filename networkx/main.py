@@ -13,7 +13,7 @@ def get_start_nodes(dg: nx.DiGraph) -> list[int]:
     return [node for node, in_degree in dg.in_degree() if in_degree==0]
 
 
-def demo_algo_dfs_tree():
+def depth_first_search():
     dg = nx.DiGraph()
     dg.add_edges_from([(1,2),(2,3),(2,5)])
     root_nids = get_start_nodes(dg)
@@ -85,7 +85,7 @@ def demo_try():
     print(f"{list(nx.bridges(undirectedG)) = }")
 
 
-def demo_add_edges_from_with_directed_graph():
+def add_edges_from_with_directed_graph():
     G = nx.DiGraph()
     G.add_edges_from(
         [
@@ -122,12 +122,10 @@ def demo_subgraph():
     nx.draw(G, with_labels=True)
     plt.show()
 
-# demo_subgraph()
-
 
 def main():
     # demo_try()
-    demo_algo_dfs_tree()
+    depth_first_search()
 
 if __name__ == '__main__':
     main()
