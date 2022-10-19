@@ -1,19 +1,35 @@
 import networkx as nx
 import networkx.algorithms as algo
-
 import matplotlib.pyplot as plt
+import logging
+from logging.config import fileConfig
+
+fileConfig('logging.ini')
+logger = logging.getLogger('dev')
 
 
-def draw(G):
-    nx.draw(G, with_labels=True)
-    plt.show()
+def get_start_nodes(dg: nx.DiGraph) -> list[int]:
+    assert isinstance(dg, nx.DiGraph)
+    return [node for node, in_degree in dg.in_degree() if in_degree==0]
 
 
-def demo1():
-    # H = nx.path_graph(5)
-    # G.add_nodes_from([4,3, 7,8,9])
-    # G.add_edges_from([[4,3], [7,8], [9,4], [4,8]])
+def demo_algo_dfs_tree():
+    dg = nx.DiGraph()
+    dg.add_edges_from([(1,2),(2,3),(2,5)])
+    root_nids = get_start_nodes(dg)
 
+    if dg.has_node(root_nids[0]):
+        child_parent = nx.dfs_predecessors(dg, root_nids[0])
+        logger.debug(f'{child_parent = }')
+        parent_child = nx.dfs_successors(dg, root_nids[0])
+        logger.debug(f'{parent_child = }')
+        dfs_tree_graph = nx.dfs_tree(dg, root_nids[0])
+        logger.debug(f'{dfs_tree_graph.nodes = }')
+
+    # nx.draw(dg, with_labels=True)
+    # plt.show()
+
+def demo_try():
     # Z = nx.union(H, G)
     # g1 = nx.junction_tree(G)
     # Z2 = nx.disjoint_union(H, G)
@@ -69,7 +85,7 @@ def demo1():
     print(f"{list(nx.bridges(undirectedG)) = }")
 
 
-def demo2():
+def demo_add_edges_from_with_directed_graph():
     G = nx.DiGraph()
     G.add_edges_from(
         [
@@ -87,10 +103,9 @@ def demo2():
     print(f'{list(nx.strongly_connected_components(G)) = }')
     breakpoint()
 
-
-
     S = nx.intersection(G, H)
-    draw(S)
+    nx.draw(G, with_labels=True)
+    plt.show()
 
 def demo_subgraph():
     G = nx.DiGraph()
@@ -104,8 +119,15 @@ def demo_subgraph():
 
     K = nx.induced_subgraph(G, [3,4,5])
     list(K.nodes)
-    draw(K)
+    nx.draw(G, with_labels=True)
+    plt.show()
 
 # demo_subgraph()
 
-demo1()
+
+def main():
+    # demo_try()
+    demo_algo_dfs_tree()
+
+if __name__ == '__main__':
+    main()
