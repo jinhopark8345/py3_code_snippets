@@ -119,3 +119,5 @@ data/
 *.txt
 
 *.pth
+
+.dir-locals.el
