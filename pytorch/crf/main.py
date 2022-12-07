@@ -10,6 +10,7 @@ emissions = torch.randn(seq_length, batch_size, num_tags)
 tags = torch.tensor([[0, 1], [2, 4], [3, 1]], dtype=torch.long)  # (seq_length, batch_size)
 print(model(emissions, tags))
 
+# when all of the guess were right but with small margin
 emissions = torch.tensor([
     [[1, 0, 0, 0, 0], [0, 1, 0, 0, 0]],
     [[0, 0, 1, 0, 0], [0, 0, 0, 0, 1]],
@@ -17,8 +18,8 @@ emissions = torch.tensor([
 ])
 tags = torch.tensor([[0, 1], [2, 4], [3, 1]], dtype=torch.long)  # (seq_length, batch_size)
 print(model(emissions, tags))
-breakpoint()
 
+# when all of the guess were right but with big margin
 emissions = torch.tensor([
     [[100, 0, 0, 0, 0], [0, 100, 0, 0, 0]],
     [[0, 0, 100, 0, 0], [0, 0, 0, 0, 100]],
@@ -27,7 +28,7 @@ emissions = torch.tensor([
 tags = torch.tensor([[0, 1], [2, 4], [3, 1]], dtype=torch.long)  # (seq_length, batch_size)
 print(model(emissions, tags))
 
-# tensor(-12.7431, grad_fn=<SumBackward0>)
+# when all of the guess were right but with bigger margin
 emissions = torch.tensor([
     [[100, -100, -100, -100, -100]],
     [[-100, -100, 100, -100, -100]],
@@ -35,5 +36,19 @@ emissions = torch.tensor([
 ])
 tags = torch.tensor([[0], [2], [3]], dtype=torch.long)
 print(model(emissions, tags))
+
+
+        # if tags is not None: # crf training
+        #     log_likelihood, sequence_of_tags = self.crf(emissions, tags), self.crf.decode(emissions)
+        #     return log_likelihood, sequence_of_tags
+        # else: # tag inference
+        #     sequence_of_tags = self.crf.decode(emissions)
+        #     return sequence_of_tags, outputs
+
+model.decode(emissions)
+# >>> (Pdb++) model.decode(emissions)
+# >>> [[0, 2, 3]]
+
+
 
 breakpoint()

@@ -178,3 +178,31 @@ i = InventoryItem()
 print(i.quantity_on_hand)  # 100
 i.quantity_on_hand = 2.5  # calls __set__ with 2.5
 print(i.quantity_on_hand)  # 2
+
+
+
+import string
+import random
+
+def generate_id() -> str:
+    return "".join(random.choices(string.ascii_uppercase, k=12))
+
+
+# @dataclass(kw_only=True)
+# @dataclass(frozen=True)
+@dataclass
+class Person:
+    name: str
+    address: str
+    active: bool = True
+    email_address: List[str] = field(default_factory=list)
+    id: str = field(init=False, default_factory=generate_id)
+    search_string: str = field(init=False, repr=False) # if you do repr=False, print will not show this
+
+
+    def __post_init__(self) -> None:
+        self.search_string = f'{self.name} {self.address}'
+
+# p1 = Person('Jinho', "seoul")
+p1 = Person(name='Jinho', address="seoul")
+print(f'{p1 = }')

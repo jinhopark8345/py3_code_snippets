@@ -125,7 +125,19 @@ def demo_subgraph():
 
 def main():
     # demo_try()
-    depth_first_search()
+    # depth_first_search()
+
+    for _ in range(1000) :
+        options = {
+            'node_color': 'black',
+            'node_size': 100,
+            'width': 3,
+        }
+        G = nx.dodecahedral_graph()
+        shells = [[2, 3, 4, 5, 6], [8, 1, 0, 19, 18, 17, 16, 15, 14, 7], [9, 10, 11, 12, 13]]
+        nx.draw_shell(G, nlist=shells, **options)
+        nx.draw(G)
+        plt.savefig("path.png")
 
 if __name__ == '__main__':
     main()
