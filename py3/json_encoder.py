@@ -1,4 +1,8 @@
 
+import json
+from typing import Union
+from pprint import pprint
+
 def export_json(json_obj, json_path):
     encoder = CompactJSONEncoder(indent=4)
     with open(json_path, 'w', encoding='UTF-8') as f:
@@ -99,3 +103,12 @@ class CompactJSONEncoder(json.JSONEncoder):
         return self.INDENTATION_CHAR * (self.indentation_level * self.indent)
 
 
+
+with open('resources/json_demo.json', 'r', encoding='utf-8') as f:
+    data = json.load(f)
+pprint(data)
+
+from json_encoder import CompactJSONEncoder
+with open('resources/json_custom_encoder_output.json', 'w', encoding='UTF-8') as f:
+    encoder = CompactJSONEncoder(indent=4)
+    f.write(encoder(data))

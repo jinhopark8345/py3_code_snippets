@@ -17,10 +17,10 @@ else
 fi
 
 
-work_dir="/home/jhpark/Projects/lovit/fix_xlsx_export/" ; cd $work_dir
-model_path="/home/jhpark/models/enhance_xlsx_writer"
-dataset="/home/jhpark/dataset/MedDataset/$data_folder/images"
-output="/home/jhpark/dataset/MedDataset/output_$data_folder"
+work_dir="/home/jinho/Projects/lovit/fix_xlsx_export/" ; cd $work_dir
+model_path="/home/jinho/models/enhance_xlsx_writer"
+dataset="/home/jinho/dataset/MedDataset/$data_folder/images"
+output="/home/jinho/dataset/MedDataset/output_$data_folder"
 
 # change data_type accordingly
 data_type="MedTable"

@@ -1,0 +1,5 @@
+{
+    "args": { "model_name": "YOLOv2", "lr": 100000 },
+    "user": "Jinho Park",
+    "tag": "한글 json 테스트"
+}

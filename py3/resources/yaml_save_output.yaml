@@ -1,0 +1,5 @@
+args:
+  lr: 1e5
+  model_name: YOLOv2
+tag: 한글 test
+user: Jinho Park
