@@ -1,5 +1,0 @@
-
-### install
-```bash
-pip install .
-```
