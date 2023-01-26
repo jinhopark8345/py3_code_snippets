@@ -129,13 +129,36 @@ def draw_boxes(draw, boxes, fnt):
         draw.text((box[0],box[1]), str(idx), fill=(0,0,255), font=fnt)
         draw.rectangle(box, outline=(255,0,0), width=2)
 
+def draw_random_lines_between_boxes(draw, boxes, fnt):
 
+    for _ in range(100):
+        rand_idx1 = int(random() * len(boxes))
+        rand_idx2 = int(random() * len(boxes))
+        start_box = boxes[rand_idx1]
+        end_box = boxes[rand_idx2]
+
+        start_x = (start_box[0] + start_box[2]) // 2
+        start_y = (start_box[1] + start_box[3]) // 2
+        end_x = (end_box[0] + end_box[2]) // 2
+        end_y = (end_box[1] + end_box[3]) // 2
+
+        random_color = (int(random() * 255), int(random() * 255), int(random() * 255))
+
+        draw.line(((start_x, start_y), (end_x, end_y)), fill=random_color, width=1)
+
+
+
+# prepare empty image
 img = Image.new('RGB', (3400, 2500), (255, 255,255))
 
+# prepare draw
 draw = ImageDraw.Draw(img)
+
 boxes = [list(map(int, box)) for box in boxes]
+
 fnt = ImageFont.truetype("Pillow/Tests/fonts/FreeMono.ttf", 100)
 draw_boxes(draw, boxes, fnt)
+draw_random_lines_between_boxes(draw, boxes, fnt)
 img.show()
 
 
