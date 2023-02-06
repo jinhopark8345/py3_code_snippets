@@ -3,19 +3,17 @@ from random import random
 from PIL import Image, ImageDraw, ImageFont
 import numpy as np
 
+np.set_printoptions(suppress=True)
+
+
+
+# np.set_printoptions(Supress = True)
 # def get_rand_box():
 #     start_x = random() * 3200
 #     start_y = random() * 2000
-
 #     width = random() * 300 + 50
 #     height = random() * 200 + 30
-
 #     return [start_x, start_y, start_x + width, start_y + height]
-
-
-# np.array([[1, 2, 3, 4], [5, 6, 7, 8]])
-
-
 # boxes = [get_rand_box() for _ in range(100)]
 
 
@@ -122,7 +120,7 @@ boxes = [
     [2683.06044, 612.02311844, 2868.50447613, 813.19514696],
 ]
 
-boxes = np.array(boxes)
+# boxes = np.array(boxes)
 
 def draw_boxes(draw, boxes, fnt):
     for idx, box in enumerate(boxes):
@@ -155,10 +153,12 @@ img = Image.new('RGB', (3400, 2500), (255, 255,255))
 draw = ImageDraw.Draw(img)
 
 boxes = [list(map(int, box)) for box in boxes]
+texts = [str(random()) for _ in range(len(boxes))]
 
 fnt = ImageFont.truetype("Pillow/Tests/fonts/FreeMono.ttf", 100)
-draw_boxes(draw, boxes, fnt)
-draw_random_lines_between_boxes(draw, boxes, fnt)
-img.show()
+# draw_boxes(draw, boxes, fnt)
+# draw_random_lines_between_boxes(draw, boxes, fnt)
+# img.show()
 
 
+sort_boxes_by_line(boxes, texts)

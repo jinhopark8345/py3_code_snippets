@@ -121,3 +121,5 @@ data/
 *.pth
 
 .dir-locals.el
+
+numpy/sort_boxes_by_line.py
