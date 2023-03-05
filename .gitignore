@@ -123,3 +123,5 @@ data/
 .dir-locals.el
 
 numpy/sort_boxes_by_line.py
+
+pandas/pr_report.html
