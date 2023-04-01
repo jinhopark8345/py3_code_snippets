@@ -3,32 +3,38 @@ import os
 import cv2
 from pprint import pprint
 from tqdm import tqdm
+import shutil
 import exifread
 from PIL import Image
 
 
-root = "/home/jinho/Downloads/samples"
-fpaths = [os.path.join(root, f) for f in os.listdir(root)]
 
 def read_tiff_file(fpath):
     fname = os.path.basename(fpath)
     print(f'process: {fname}')
+    rtv_str = ""
+
     try:
         pil_img = Image.open(fpath)
-        print(f'\t {pil_img.info = }')
-        # print()
-        # breakpoint()
-
-    # cv_img = cv2.imread(f, cv2.IMREAD_UNCHANGED)
-
+        rtv_str = pil_img.info
     except:
         print(f'failed to use Pillow on : {fpath}, using exifread')
 
         with open(fpath, 'rb') as f:
             tags = exifread.process_file(f, details=False)
-            print(f'\t {tags = }')
+            rtv_str = tags
 
-            # pprint([(k, v.values) for k, v in tags.items()])
+    return rtv_str
 
-for fpath in tqdm(fpaths):
-    read_tiff_file(fpath)
+
+def main(root):
+    fpaths = [os.path.join(root, f) for f in os.listdir(root)]
+    for fpath in tqdm(fpaths):
+        rtv = read_tiff_file(fpath)
+        print(rtv)
+
+
+
+if __name__ == '__main__':
+    root = "/home/jinho/Projects/py3_code_snippets/py3/resources/tiff_files"
+    main(root)
