@@ -1,10 +1,9 @@
-
 from random import random
-from PIL import Image, ImageDraw, ImageFont
+
 import numpy as np
+from PIL import Image, ImageDraw, ImageFont
 
 np.set_printoptions(suppress=True)
-
 
 
 # np.set_printoptions(Supress = True)
@@ -122,10 +121,12 @@ boxes = [
 
 # boxes = np.array(boxes)
 
+
 def draw_boxes(draw, boxes, fnt):
     for idx, box in enumerate(boxes):
-        draw.text((box[0],box[1]), str(idx), fill=(0,0,255), font=fnt)
-        draw.rectangle(box, outline=(255,0,0), width=2)
+        draw.text((box[0], box[1]), str(idx), fill=(0, 0, 255), font=fnt)
+        draw.rectangle(box, outline=(255, 0, 0), width=2)
+
 
 def draw_random_lines_between_boxes(draw, boxes, fnt):
 
@@ -145,9 +146,8 @@ def draw_random_lines_between_boxes(draw, boxes, fnt):
         draw.line(((start_x, start_y), (end_x, end_y)), fill=random_color, width=1)
 
 
-
 # prepare empty image
-img = Image.new('RGB', (3400, 2500), (255, 255,255))
+img = Image.new("RGB", (3400, 2500), (255, 255, 255))
 
 # prepare draw
 draw = ImageDraw.Draw(img)

@@ -125,3 +125,6 @@ data/
 numpy/sort_boxes_by_line.py
 
 pandas/pr_report.html
+
+pytorch/lightning_demo/result
+pytorch/lightning_demo/MNIST

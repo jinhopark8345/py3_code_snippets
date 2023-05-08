@@ -12,6 +12,8 @@ pyinstrument <python-script>
 pyinstrument --show-all <python-script>
 #+end_src
 
+#+RESULTS:
+
 * to html (vue)
 pyinstrument -o profile.html <python-script>
 
