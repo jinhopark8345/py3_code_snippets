@@ -2,6 +2,9 @@ import torch
 import torchvision
 import torchvision.transforms as transforms
 
+
+torch.manual_seed(2023)
+
 transform = transforms.Compose(
     [transforms.ToTensor(),
      transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
@@ -17,6 +20,7 @@ testloader = torch.utils.data.DataLoader(testset, batch_size=batch_size,
                                          shuffle=False, num_workers=2)
 classes = ('plane', 'car', 'bird', 'cat',
            'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
+
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -53,12 +57,12 @@ class Net(nn.Module):
         self.fc3 = nn.Linear(84, 10)
 
     def forward(self, x):
-        x = self.pool(F.relu(self.conv1(x)))
-        x = self.pool(F.relu(self.conv2(x)))
-        x = torch.flatten(x, 1) # flatten all dimensions except batch
-        x = F.relu(self.fc1(x))
-        x = F.relu(self.fc2(x))
-        x = self.fc3(x)
+        x = self.pool(F.relu(self.conv1(x))) # [bsz, 3, 32, 32] -> [bsz, 6, 28, 28] -> [bsz, 6, 14, 14]
+        x = self.pool(F.relu(self.conv2(x))) # [bsz, 6, 14, 14] -> [bsz, 16, 10, 10] -> [bsz, 16, 5, 5]
+        x = torch.flatten(x, 1) # flatten all dimensions except batch # [bsz, 16, 5, 5] -> [bsz, 16 * 5 * 5], 16*25=400
+        x = F.relu(self.fc1(x)) # [bsz, 400] -> [bsz, 120]
+        x = F.relu(self.fc2(x)) # [bsz, 120] -> [bsz, 84]
+        x = self.fc3(x) # [bsz, 84] -> [bsz, 10]
         return x
 
 
@@ -79,8 +83,7 @@ optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
 ########################################################################
 # 4. Train the network
 
-breakpoint()
-for epoch in range(2):  # loop over the dataset multiple times
+for epoch in range(1):  # loop over the dataset multiple times
 
     running_loss = 0.0
     for i, data in enumerate(trainloader, 0):
@@ -93,6 +96,7 @@ for epoch in range(2):  # loop over the dataset multiple times
         # forward + backward + optimize
         outputs = net(inputs)
         loss = criterion(outputs, labels)
+        breakpoint()
         """
         logsoftmax = nn.LogSoftmax()
         nll_loss = nn.NLLLoss()
@@ -100,90 +104,98 @@ for epoch in range(2):  # loop over the dataset multiple times
         tmp_loss = nll_loss(logsoftmax(outputs), labels)
         assert tmp_loss == loss
 
+(Pdb++) outputs
+tensor([[ 0.0615,  0.0059, -0.1052, -0.0125,  0.0449, -0.0324,  0.0117,  0.0059,
+         -0.0604, -0.0742],
+        [ 0.0445, -0.0172, -0.0899, -0.0381,  0.0661, -0.0428,  0.0254, -0.0319,
+         -0.0471, -0.0638],
+        [ 0.0454, -0.0169, -0.1020, -0.0253,  0.0635, -0.0609,  0.0238, -0.0156,
+         -0.0533, -0.0596],
+        [ 0.0454, -0.0192, -0.0937, -0.0316,  0.0656, -0.0517,  0.0291, -0.0304,
+         -0.0510, -0.0676]], grad_fn=<AddmmBackward0>)
+
+(Pdb++) outputs.shape
+torch.Size([4, 10])
+
 (Pdb++) logsoftmax(outputs)
-tensor([[-2.2791, -2.1891, -2.2654, -2.3236, -2.3643, -2.3952, -2.2406, -2.4060,
-         -2.3748, -2.2153],
-        [-2.2821, -2.1823, -2.2668, -2.3189, -2.3718, -2.3939, -2.2452, -2.4083,
-         -2.3731, -2.2120],
-        [-2.2756, -2.1918, -2.2642, -2.3145, -2.3587, -2.4003, -2.2519, -2.4055,
-         -2.3726, -2.2170],
-        [-2.2811, -2.1948, -2.2630, -2.3196, -2.3671, -2.3961, -2.2438, -2.4039,
-         -2.3727, -2.2108]], grad_fn=<LogSoftmaxBackward0>)
+tensor([[-2.2269, -2.2825, -2.3935, -2.3009, -2.2434, -2.3207, -2.2766, -2.2824,
+         -2.3488, -2.3626],
+        [-2.2397, -2.3014, -2.3741, -2.3223, -2.2181, -2.3270, -2.2588, -2.3161,
+         -2.3314, -2.3480],
+        [-2.2383, -2.3006, -2.3857, -2.3090, -2.2202, -2.3446, -2.2599, -2.2994,
+         -2.3370, -2.3433],
+        [-2.2379, -2.3025, -2.3770, -2.3149, -2.2177, -2.3349, -2.2542, -2.3137,
+         -2.3343, -2.3509]], grad_fn=<LogSoftmaxBackward0>)
 
 (Pdb++) torch.exp(outputs)
-tensor([[1.0364, 1.1341, 1.0508, 0.9914, 0.9518, 0.9229, 1.0772, 0.9129, 0.9419,
-         1.1047],
-        [1.0322, 1.1406, 1.0481, 0.9950, 0.9437, 0.9231, 1.0711, 0.9099, 0.9424,
-         1.1072],
-        [1.0397, 1.1306, 1.0517, 1.0001, 0.9569, 0.9178, 1.0647, 0.9131, 0.9436,
-         1.1026],
-        [1.0329, 1.1260, 1.0517, 0.9939, 0.9478, 0.9207, 1.0721, 0.9136, 0.9425,
-         1.1081]], grad_fn=<ExpBackward0>)
+tensor([[1.0634, 1.0059, 0.9002, 0.9875, 1.0459, 0.9681, 1.0118, 1.0060, 0.9414,
+         0.9285],
+        [1.0455, 0.9830, 0.9140, 0.9626, 1.0683, 0.9581, 1.0258, 0.9686, 0.9539,
+         0.9382],
+        [1.0464, 0.9833, 0.9030, 0.9751, 1.0656, 0.9409, 1.0241, 0.9845, 0.9481,
+         0.9421],
+        [1.0464, 0.9809, 0.9105, 0.9689, 1.0678, 0.9496, 1.0295, 0.9701, 0.9503,
+         0.9346]], grad_fn=<ExpBackward0>)
 
 (Pdb++) torch.sum(torch.exp(outputs), dim=-1)
-tensor([10.1240, 10.1133, 10.1207, 10.1093], grad_fn=<SumBackward1>)
+tensor([9.8587, 9.8180, 9.8130, 9.8088], grad_fn=<SumBackward1>)
 
 (Pdb++) torch.sum(torch.exp(outputs), dim=-1).unsqueeze(dim=-1)
-tensor([[10.1240],
-        [10.1133],
-        [10.1207],
-        [10.1093]], grad_fn=<UnsqueezeBackward0>)
+tensor([[9.8587],
+        [9.8180],
+        [9.8130],
+        [9.8088]], grad_fn=<UnsqueezeBackward0>)
 
-(Pdb++) torch.exp(outputs) / torch.sum(torch.exp(outputs), dim=-1).unsqueeze(dim=-1)
-tensor([[0.1024, 0.1120, 0.1038, 0.0979, 0.0940, 0.0912, 0.1064, 0.0902, 0.0930,
-         0.1091],
-        [0.1021, 0.1128, 0.1036, 0.0984, 0.0933, 0.0913, 0.1059, 0.0900, 0.0932,
-         0.1095],
-        [0.1027, 0.1117, 0.1039, 0.0988, 0.0945, 0.0907, 0.1052, 0.0902, 0.0932,
-         0.1089],
-        [0.1022, 0.1114, 0.1040, 0.0983, 0.0938, 0.0911, 0.1061, 0.0904, 0.0932,
-         0.1096]], grad_fn=<DivBackward0>)
-
-(Pdb++) torch.log(torch.exp(outputs) / torch.sum(torch.exp(outputs), dim=-1).unsqueeze(dim=-1))
-tensor([[-2.2791, -2.1891, -2.2654, -2.3236, -2.3643, -2.3952, -2.2406, -2.4060,
-         -2.3748, -2.2153],
-        [-2.2821, -2.1823, -2.2668, -2.3189, -2.3718, -2.3939, -2.2452, -2.4083,
-         -2.3731, -2.2120],
-        [-2.2756, -2.1918, -2.2642, -2.3145, -2.3587, -2.4003, -2.2519, -2.4055,
-         -2.3726, -2.2170],
-        [-2.2811, -2.1948, -2.2630, -2.3196, -2.3671, -2.3961, -2.2438, -2.4039,
-         -2.3727, -2.2108]], grad_fn=<LogBackward0>)
-
-(Pdb++) nll_loss(torch.log(torch.exp(outputs) / torch.sum(torch.exp(outputs), dim=-1).unsqueeze(dim=-1)), labels)
-tensor(2.2976, grad_fn=<NllLossBackward0>)
-
-(Pdb++) torch.gather(torch.log(torch.exp(outputs) / torch.sum(torch.exp(outputs), dim=-1).unsqueeze(dim=-1)), 1, labels.unsqueeze(dim=-1))
-tensor([[-2.2406],
-        [-2.1823],
-        [-2.4003],
-        [-2.3671]], grad_fn=<GatherBackward0>)
-
-(Pdb++) torch.mean(torch.gather(torch.log(torch.exp(outputs) / torch.sum(torch.exp(outputs), dim=-1).unsqueeze(dim=-1)), 1, labels.unsqueeze(dim=-1)))
-tensor(-2.2976, grad_fn=<MeanBackward0>)
-
-(Pdb++) -torch.mean(torch.gather(torch.log(torch.exp(outputs) / torch.sum(torch.exp(outputs), dim=-1).unsqueeze(dim=-1)), 1, labels.unsqueeze(dim=-1)))
-tensor(2.2976, grad_fn=<NegBackward0>)
-
-(Pdb++) loss
-tensor(2.2976, grad_fn=<NllLossBackward0>)
-
-
-
-
-(Pdb++) criterion(outputs, labels)
-tensor(2.2976, grad_fn=<NllLossBackward0>)
-
-(Pdb++) nll_loss(logsoftmax(outputs), labels)
-tensor(2.2976, grad_fn=<NllLossBackward0>)
-
-(Pdb++) torch.exp(outputs).shape
-torch.Size([4, 10])
 (Pdb++) torch.sum(torch.exp(outputs), dim=-1).unsqueeze(dim=-1).shape
 torch.Size([4, 1])
 
-(Pdb++) softmax_output = torch.exp(outputs) / torch.sum(torch.exp(outputs), dim=-1).unsqueeze(dim=-1)
-(Pdb++) nll_loss(torch.log(softmax_output), labels)
-tensor(2.2976, grad_fn=<NllLossBackward0>)
+(Pdb++) output_softmax = torch.exp(outputs) / torch.sum(torch.exp(outputs), dim=-1).unsqueeze(dim=-1)
+(Pdb++) output_softmax
+tensor([[0.1079, 0.1020, 0.0913, 0.1002, 0.1061, 0.0982, 0.1026, 0.1020, 0.0955,
+         0.0942],
+        [0.1065, 0.1001, 0.0931, 0.0980, 0.1088, 0.0976, 0.1045, 0.0987, 0.0972,
+         0.0956],
+        [0.1066, 0.1002, 0.0920, 0.0994, 0.1086, 0.0959, 0.1044, 0.1003, 0.0966,
+         0.0960],
+        [0.1067, 0.1000, 0.0928, 0.0988, 0.1089, 0.0968, 0.1050, 0.0989, 0.0969,
+         0.0953]], grad_fn=<DivBackward0>)
+
+(Pdb++) output_logsoftmax = torch.log(torch.exp(outputs) / torch.sum(torch.exp(outputs), dim=-1).unsqueeze(dim=-1))
+(Pdb++) output_logsoftmax
+tensor([[-2.2269, -2.2825, -2.3935, -2.3009, -2.2434, -2.3207, -2.2766, -2.2824,
+         -2.3488, -2.3626],
+        [-2.2397, -2.3014, -2.3741, -2.3223, -2.2181, -2.3270, -2.2588, -2.3161,
+         -2.3314, -2.3480],
+        [-2.2383, -2.3006, -2.3857, -2.3090, -2.2202, -2.3446, -2.2599, -2.2994,
+         -2.3370, -2.3433],
+        [-2.2379, -2.3025, -2.3770, -2.3149, -2.2177, -2.3349, -2.2542, -2.3137,
+         -2.3343, -2.3509]], grad_fn=<LogBackward0>)
+
+(Pdb++) nll_loss(torch.log(torch.exp(outputs) / torch.sum(torch.exp(outputs), dim=-1).unsqueeze(dim=-1)), labels)
+tensor(2.3258, grad_fn=<NllLossBackward0>)
+
+(Pdb++) output_batch_loss = torch.gather(torch.log(torch.exp(outputs) / torch.sum(torch.exp(outputs), dim=-1).unsqueeze(dim=-1)), 1, labels.unsqueeze(dim=-1))
+(Pdb++) output_batch_loss
+tensor([[-2.3207],
+        [-2.3480],
+        [-2.2994],
+        [-2.3349]], grad_fn=<GatherBackward0>)
+
+(Pdb++) torch.mean(torch.gather(torch.log(torch.exp(outputs) / torch.sum(torch.exp(outputs), dim=-1).unsqueeze(dim=-1)), 1, labels.unsqueeze(dim=-1)))
+tensor(-2.3258, grad_fn=<MeanBackward0>)
+
+(Pdb++) -torch.mean(torch.gather(torch.log(torch.exp(outputs) / torch.sum(torch.exp(outputs), dim=-1).unsqueeze(dim=-1)), 1, labels.unsqueeze(dim=-1)))
+tensor(2.3258, grad_fn=<NegBackward0>)
+
+(Pdb++) loss
+tensor(2.3258, grad_fn=<NllLossBackward0>)
+
+(Pdb++) criterion(outputs, labels)
+tensor(2.3258, grad_fn=<NllLossBackward0>)
+
+(Pdb++) nll_loss(logsoftmax(outputs), labels)
+tensor(2.3258, grad_fn=<NllLossBackward0>)
+
 
 
         """
