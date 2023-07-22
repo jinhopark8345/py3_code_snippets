@@ -68,7 +68,7 @@ def save_sroie_dataset_in_huggingface_arrow_format(sroie_root, save_root):
             "img": [d["imgs"] for d in samples],
             "labels": [d["labels"] for d in samples],
             "words": [d["words"] for d in samples],
-            "bboxs": [d["bbox"] for d in samples],
+            "bboxes": [d["bbox"] for d in samples],
         }
 
         dataset = Dataset.from_dict(dataset_dicts)
@@ -173,7 +173,7 @@ if __name__ == "__main__":
     # 2. split train dataset into train & validation dataset
     train_path = os.path.join(train_test_hug_dataset_save_root, 'train')
     test_path = os.path.join(train_test_hug_dataset_save_root, 'test')
-    train_split_to_train_and_validation_and_push_to_hub(train_val_test_hug_dataset_save_root, train_path, test_path)
+    train_split_to_train_and_validation_and_push_to_hub(train_path, test_path,train_val_test_hug_dataset_save_root, 'sroie')
 
 
     """
@@ -199,7 +199,7 @@ if __name__ == "__main__":
 
     # check if dataset is loaded correctly
 
-    data = load_dataset(f"{USER_ID}/'sroie")
+    data = load_dataset(f"{USER_ID}/sroie")
 
     """
     DatasetDict({
