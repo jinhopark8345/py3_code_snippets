@@ -32,7 +32,7 @@ def save_sroie_dataset_in_huggingface_arrow_format(sroie_root, save_root):
         imgs_dir = os.path.join(split_path, "images")
         annos = sorted(os.listdir(annos_dir))
         imgs = sorted(os.listdir(imgs_dir))
-        dicts = []
+        samples = []
 
         for anno, img in zip(annos, imgs):
             anno_file = os.path.basename(anno)
@@ -56,19 +56,19 @@ def save_sroie_dataset_in_huggingface_arrow_format(sroie_root, save_root):
                         new_labels[lidx] = c
                         break
 
-            d = {
+            sample = {
                 "imgs": img,
                 "labels": new_labels,
                 "words": data["words"],
                 "bbox": data["bbox"],
             }
-            dicts.append(d)
+            samples.append(sample)
 
         dataset_dicts = {
-            "img": [d["imgs"] for d in dicts],
-            "labels": [d["labels"] for d in dicts],
-            "words": [d["words"] for d in dicts],
-            "bboxs": [d["bbox"] for d in dicts],
+            "img": [d["imgs"] for d in samples],
+            "labels": [d["labels"] for d in samples],
+            "words": [d["words"] for d in samples],
+            "bboxs": [d["bbox"] for d in samples],
         }
 
         dataset = Dataset.from_dict(dataset_dicts)
