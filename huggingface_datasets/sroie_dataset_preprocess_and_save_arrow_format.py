@@ -34,11 +34,11 @@ def save_sroie_dataset_in_huggingface_arrow_format(sroie_root, save_root):
         imgs = sorted(os.listdir(imgs_dir))
         samples = []
 
-        for anno, img in zip(annos, imgs):
+        for anno, img_filename in zip(annos, imgs):
             anno_file = os.path.basename(anno)
-            img_file = os.path.basename(img)
+            img_file = os.path.basename(img_filename)
             anno_path = os.path.join(annos_dir, anno)
-            img_path = os.path.join(imgs_dir, img)
+            img_path = os.path.join(imgs_dir, img_filename)
 
             assert os.path.splitext(anno_file)[0] == os.path.splitext(img_file)[0]
 
@@ -61,6 +61,7 @@ def save_sroie_dataset_in_huggingface_arrow_format(sroie_root, save_root):
                 "labels": new_labels,
                 "words": data["words"],
                 "bbox": data["bbox"],
+                "filename": img_filename,
             }
             samples.append(sample)
 
@@ -69,6 +70,7 @@ def save_sroie_dataset_in_huggingface_arrow_format(sroie_root, save_root):
             "labels": [d["labels"] for d in samples],
             "words": [d["words"] for d in samples],
             "bboxes": [d["bbox"] for d in samples],
+            "filename": [d['filename'] for d in samples],
         }
 
         dataset = Dataset.from_dict(dataset_dicts)
@@ -145,7 +147,7 @@ if __name__ == "__main__":
     # after this we will be able to call/load dataset from huggingface hub with below command
 
     > from datasets import load_dataset
-    > data = load_dataset(f"{USER_ID}/'sroie")
+    > data = load_dataset(f"{USER_ID}/sroie")
 
     """
 
