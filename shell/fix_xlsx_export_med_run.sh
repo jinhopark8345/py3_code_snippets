@@ -1,10 +1,10 @@
 #!/bin/bash
 
-# MedTable  = MedReceipt   (from entity_extractor) : 진료비 영수증
-# MedDetail = MedStatement (from entity_extractor) : 진료비 세부산정내역
+# Dataset1  = MedReceipt   (from entity_extractor)
+# Dataset2 = MedStatement (from entity_extractor)
 
-# data_folder="MedDetail_good_1"
-# data_folder="MedTable_small_1"
+# data_folder="Dataset2_good_1"
+# data_folder="Dataset1_small_1"
 data_folder=$1 # use first input argument as data_folder
 
 if [[ -z $1 ]];
@@ -23,9 +23,9 @@ dataset="/home/jinho/dataset/MedDataset/$data_folder/images"
 output="/home/jinho/dataset/MedDataset/output_$data_folder"
 
 # change data_type accordingly
-data_type="MedTable"
-if [[ "$data_folder" == "MedDetail" ]]; then
-   data_type="MedDetail"
+data_type="Dataset1"
+if [[ "$data_folder" == "Dataset2" ]]; then
+   data_type="Dataset2"
 fi
 
 
