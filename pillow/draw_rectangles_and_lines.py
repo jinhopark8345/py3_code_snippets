@@ -122,7 +122,7 @@ boxes = [
 # boxes = np.array(boxes)
 
 
-def draw_boxes(draw, boxes, fnt):
+def draw_bboxes_on_pil_image(draw, boxes, fnt):
     for idx, box in enumerate(boxes):
         draw.text((box[0], box[1]), str(idx), fill=(0, 0, 255), font=fnt)
         draw.rectangle(box, outline=(255, 0, 0), width=2)
